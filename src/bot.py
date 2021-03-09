@@ -22,9 +22,9 @@ async def ping(ctx):
 
 @bot.command()
 async def role(ctx, role: discord.Role):
-  member = ctx.message.author
-  await member.add_roles(role)
-  await ctx.send(f"role granted!")
+    member = ctx.message.author
+    await member.add_roles(role)
+    await ctx.send("role granted!")
 
 
 bot.run(os.environ['TOKEN'])
