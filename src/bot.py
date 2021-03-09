@@ -6,7 +6,7 @@ from discord.ext.commands import CommandNotFound
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix=os.environ['PREFIX'], intents=intents)
 
-@client.event
+@bot.event
 async def on_ready() :
     await client.change_presence(status = discord.Status.idle, activity = discord.Game("Listening to >help"))
 
