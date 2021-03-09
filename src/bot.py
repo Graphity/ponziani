@@ -9,7 +9,7 @@ admin_role_id = int(os.environ["ADMIN_ROLE_ID"])
 
 @bot.event
 async def on_ready() :
-    await bot.change_presence(status = discord.Status.idle, activity = discord.Game("Listening to >help"))
+    await bot.change_presence(status = discord.Status.idle, activity = discord.Game(f"Listening to {bot.command_prefix}help"))
 
 @bot.event
 async def on_command_error(ctx, error):
