@@ -20,7 +20,7 @@ async def on_command_error(ctx, error):
 async def ping(ctx):
     await ctx.send(f'pong: {round(bot.latency * 1000)}MS')
 
-@client.command()
+@bot.command()
 async def role(ctx, role: discord.Role):
   member = ctx.message.author
   await member.add_roles(role)
