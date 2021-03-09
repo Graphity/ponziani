@@ -7,9 +7,9 @@ bot = commands.Bot(command_prefix=os.environ["PREFIX"], intents=intents)
 moderator_role_id = int(os.environ["MODERATOR_ROLE_ID"])
 admin_role_id = int(os.environ["ADMIN_ROLE_ID"])
 
-@client.event
+@bot.event
 async def on_ready() :
-    await client.change_presence(status = discord.Status.idle, activity = discord.Game("Listening to >help"))
+    await bot.change_presence(status = discord.Status.idle, activity = discord.Game("Listening to >help"))
 
 @bot.event
 async def on_command_error(ctx, error):
