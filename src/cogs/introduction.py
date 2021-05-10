@@ -18,7 +18,7 @@ class Introduction(commands.Cog):
     async def on_message(self, message):
         if self.bot.user.id in message.raw_mentions:
             embed = discord.Embed(
-                title="",
+                title="Source on GitHub",
                 type="rich",
                 description=f"**Prefix:** `{self.bot.command_prefix}`",
                 color=0x49329e,
