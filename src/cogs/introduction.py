@@ -5,13 +5,13 @@ from discord.ext import commands
 class Introduction(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.invite_link = discord.utils.oauth_url(client_id=str(bot.user.id), permissions=discord.Permissions(permissions=8))
         self.github_repo = "https://github.com/Graphity/it-georgia"
 
     @commands.Cog.listener()
     async def on_ready(self):
         listening = discord.Activity(type=discord.ActivityType.listening, name=f"{self.bot.command_prefix}help")
         await self.bot.change_presence(activity=listening)
+        print("Ready...")
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -34,7 +34,7 @@ class Introduction(commands.Cog):
 
     @commands.command()
     async def invite(self, ctx):
-        await ctx.send(self.invite_link)
+        await ctx.send(discord.utils.oauth_url(client_id=str(self.bot.user.id), permissions=discord.Permissions(permissions=8)))
 
     @commands.command()
     async def source(self, ctx):
