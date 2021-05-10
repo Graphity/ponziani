@@ -6,6 +6,7 @@ class Introduction(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.github_repo = "https://github.com/Graphity/it-georgia"
+        self.invite_link = discord.utils.oauth_url(client_id=str(bot.user.id), permissions=discord.Permissions(permissions=8))
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -34,7 +35,7 @@ class Introduction(commands.Cog):
 
     @commands.command()
     async def invite(self, ctx):
-        await ctx.send(discord.utils.oauth_url(client_id=str(self.bot.user.id), permissions=discord.Permissions(permissions=8)))
+        await ctx.send(self.invite_link)
 
     @commands.command()
     async def source(self, ctx):
