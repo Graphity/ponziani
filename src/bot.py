@@ -7,10 +7,6 @@ bot = commands.Bot(command_prefix=os.environ["PREFIX"], intents=intents)
 moderator_role_id = int(os.environ["MODERATOR_ROLE_ID"])
 admin_role_id = int(os.environ["ADMIN_ROLE_ID"])
 
-@bot.event
-async def on_ready():
-    listening = discord.Activity(type=discord.ActivityType.listening, name=f"{bot.command_prefix}help")
-    await bot.change_presence(activity=listening)
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -26,12 +22,10 @@ async def on_command_error(ctx, error):
 async def ping(ctx):
     await ctx.send(f"pong: {round(bot.latency * 1000)}MS")
 
-@bot.command()
-@commands.has_any_role(moderator_role_id, admin_role_id)
-async def role(ctx, role: discord.Role):
-    member = ctx.message.author
-    await member.add_roles(role)
-    await ctx.send("role granted!")
+
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        bot.load_extension(f'cogs.{filename[:-3]}')
 
 
 bot.run(os.environ["TOKEN"])
