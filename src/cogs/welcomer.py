@@ -26,7 +26,7 @@ class Welcomer(commands.Cog):
     def create_card(self, member_name, guild_name, member_count, member_avatar_url):
         background = Image.new("RGB", (1100, 500), color=(9, 10, 11))
         background_draw = ImageDraw.Draw(background)
-        font = ImageFont.truetype("Hack-Bold.ttf", 45)
+        font = ImageFont.truetype("/app/.fonts/Hack-Bold.ttf", 45)
         font_color = random.choice(["#ee4540", "#85daff", "#429fa4", "#ff813c", "#9580ff", "#8aff80", "#ffff80", "#004aac"])
         background_draw.text((550, 320), f"Hello {member_name}", fill=font_color, font=font, anchor="mt")
         background_draw.text((550, 380), f"Welcome to {guild_name}", fill=font_color, font=font, anchor="mt")
