@@ -23,7 +23,7 @@ async def ping(ctx):
     await ctx.send(f"pong: {round(bot.latency * 1000)}MS")
 
 
-for filename in os.listdit("./"):
+for filename in os.listdir("./"):
     print(filename)
 
 """
