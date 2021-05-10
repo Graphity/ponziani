@@ -26,14 +26,11 @@ class Welcomer(commands.Cog):
     def create_card(self, member_name, guild_name, member_count, member_avatar_url):
         background = Image.new("RGB", (1100, 500), color=(9, 10, 11))
         background_draw = ImageDraw.Draw(background)
-        font_first = ImageFont.truetype("Hack-Bold.ttf", 45)
-        font_second = ImageFont.truetype("Hack-Bold.ttf", 45)
-        font_third = ImageFont.truetype("Hack-Bold.ttf", 45)
-        name = "H" * 32
+        font = ImageFont.truetype("Hack-Bold.ttf", 45)
         font_color = random.choice(["#ee4540", "#85daff", "#429fa4", "#ff813c", "#9580ff", "#8aff80", "#ffff80", "#004aac"])
-        background_draw.text((550, 320), f"Hello {member_name}", fill=font_color, font=font_first, anchor="mt")
-        background_draw.text((550, 380), f"Welcome to {guild_name}", fill=font_color, font=font_second, anchor="mt")
-        background_draw.text((550, 440), f"Member #{member_count}", fill=font_color, font=font_third, anchor="mt")
+        background_draw.text((550, 320), f"Hello {member_name}", fill=font_color, font=font, anchor="mt")
+        background_draw.text((550, 380), f"Welcome to {guild_name}", fill=font_color, font=font, anchor="mt")
+        background_draw.text((550, 440), f"Member #{member_count}", fill=font_color, font=font, anchor="mt")
 
         r = requests.get(member_avatar_url)
         avatar = Image.open(BytesIO(r.content)).convert("RGB").resize((260, 260))
