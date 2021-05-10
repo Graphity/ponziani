@@ -6,7 +6,7 @@ class Introduction(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.github_repo = "https://github.com/Graphity/it-georgia"
-        self.invite_link = discord.utils.oauth_url(client_id=str(bot.user.id), permissions=discord.Permissions(permissions=8))
+        self.invite_link = "https://discord.com/oauth2/authorize?client_id=761998649822675016&scope=bot&permissions=8"
 
     @commands.Cog.listener()
     async def on_ready(self):
