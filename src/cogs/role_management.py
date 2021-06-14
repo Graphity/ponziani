@@ -6,14 +6,57 @@ from discord.ext import commands
 class RoleManagement(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.rrs = {}
+        self.recover()
+
+    def recover(self):
+        try:
+            with open('cache.txt') as cache:
+                self.rrs = eval(cache.read())
+        except:
+            self.rrs = {}
+
+    def update_cache(self):
+        with open('cache.txt', 'w') as f:
+            f.write(str(self.rrs))
+
+    @commands.command()
+    @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))    
+    async def manualrr(self, ctx, data):
+        await ctx.send('You are about to rewrite whole cache! Are you sure you want to do this?')
+        def check(m):
+            return m.author == ctx.author and m.channel == ctx.channel
+
+        try:
+            answer = await self.bot.wait_for('message', timeout=60.0, check=check)
+        except asyncio.TimeoutError:
+            await ctx.send('1 წუთი ამოიწურა, ვწყვეტ ლოდინს')
+            return
+        else:
+            if answer.content != 'yes':
+                return
+
+        try:
+            self.rrs = eval(data)
+        except:
+            await ctx.send('ფორმატი არასწორია')
+            return
+
+        try:
+            await ctx.author.send('Backup just in case...', file=discord.File('cache.txt'))
+        except:
+            pass
+
+        with open('cache.txt', 'w') as cache:
+            cache.write(data)
+
+        await ctx.message.add_reaction('✅')
 
     @commands.command()
     @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
     async def backuprr(self, ctx):
         try:
-            await ctx.author.send(self.rrs)
-        except discord.HTTPException:
+            await ctx.author.send(file=discord.File('cache.txt'))
+        except:
             await ctx.send('Sending the message failed.')
         else:
             await ctx.message.add_reaction('✅')
@@ -35,6 +78,7 @@ class RoleManagement(commands.Cog):
             self.rrs[ctx.guild.id][msg.id] = {'channel': msg.channel.id}
         else:
             self.rrs[ctx.guild.id] = {msg.id: {'channel': msg.channel.id}}
+        self.update_cache()
         await ctx.message.delete()
 
     @commands.command()
@@ -149,6 +193,7 @@ class RoleManagement(commands.Cog):
                         await ctx.send(f'ემოჯის ({emoji}) ვერ ვიყენებ')
                 else:
                     self.rrs[ctx.guild.id][msg_id][emoji] = role_id
+                    self.update_cache()
                     await msg.delete()
 
     def role_for_emoji(self, emoji, guild_id, message_id):
