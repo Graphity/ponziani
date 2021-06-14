@@ -9,6 +9,7 @@ class RoleManagement(commands.Cog):
         self.rrs = {}
 
     @commands.command()
+    @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
     async def backuprr(self, ctx):
         try:
             await ctx.author.send(self.rrs)
