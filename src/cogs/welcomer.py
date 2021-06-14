@@ -16,7 +16,7 @@ class Welcomer(commands.Cog):
         channel_id = os.environ.get("WELCOME_CHANNEL", 841223740456697856)
         channel = member.guild.get_channel(int(channel_id))
         self.create_card(member.name, channel.guild.name, channel.guild.member_count, member.avatar_url)
-        await channel.send(file=discord.File("welcome.png"))
+        await channel.send(f'{member.mention} just joined the server', file=discord.File("welcome.png"))
 
     @commands.command()
     @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
