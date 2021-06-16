@@ -1,15 +1,3 @@
 src/cogs/__pycache__
-
-# Local working environment
 venv
-
-# Environment vars & python runner scipt
 runner.txt
-
-# Test files
-src/trash.py
-src/trash2.py
-src/prefix.json
-
-# Test folders
-src/helpers
