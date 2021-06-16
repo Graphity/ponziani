@@ -8,7 +8,6 @@ try:
 except ModuleNotFoundError as error:
     print(error)
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 print(BASE_DIR)
 
@@ -51,6 +50,10 @@ class SysPrepare(SysInfo):
         super(SysPrepare, self).__init__()
 
     @staticmethod
+    def activate_virtual_environment(env_package_name: str):
+        subprocess.run(["sudo", "source", f"{BASE_DIR}/{env_package_name}/bin/activate"], check=True)
+
+    @staticmethod
     def install_requirements_txt() -> None:
         """Installs the requirements.txt"""
         requirements_txt_full_path = BASE_DIR / "requirements.txt"
@@ -59,9 +62,9 @@ class SysPrepare(SysInfo):
     @staticmethod
     def renew_requirements_txt() -> None:
         requirements_txt_full_path = BASE_DIR / "requirements.txt"
-        subprocess.run(["python3", "-m", "pip3", "freeze", ">", requirements_txt_full_path])
+        subprocess.run(["python3", "-m", "pip3", "freeze", ">", requirements_txt_full_path], check=True)
 
 
-a = SysPrepare()
-
-a.renew_requirements_txt()
+# a = SysPrepare()
+#
+# a.activate_virtual_environment("venv")
