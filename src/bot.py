@@ -21,19 +21,19 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=generate_mbed_context(
             title="ბრძანება",
             description="```მსგავსი ბრძანებისთვის ლოგიკა არ დაუწერია ჯერ არავის.```",
-            colour=discord.Colour.dark_red()
+            colour=discord.Colour.dark_red(),
         ))
     elif isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(embed=generate_mbed_context(
             title="არგუმენტები",
             description="```არგუმენტ(ებ)ი არასწორია```",
-            colour=discord.Colour.dark_red()
+            colour=discord.Colour.dark_red(),
         ))
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send(embed=generate_mbed_context(
             title="უფლებები",
             description="```თქვენ არ გაქვთ ამ ბრძანებით სარგებლობის უფლება.```",
-            colour=discord.Colour.dark_red()
+            colour=discord.Colour.dark_red(),
         ))
     raise error
 

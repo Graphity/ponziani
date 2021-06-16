@@ -16,17 +16,15 @@ class Administer(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_messages=True)
     async def clear(self, ctx, amount: int) -> None:
-        """
-        შლის შეტყობინებების კონკრეტულ რაოდენობას.
-        """
+        """შლის შეტყობინებების კონკრეტულ რაოდენობას."""
+
         await ctx.channel.purge(limit=amount)
 
     @commands.command()
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, *, reason=None) -> None:
-        """
-        ბანი.
-        """
+        """ბანი."""
+
         mbed = discord.Embed(
             title="Success",
             description=f"ბანი დაედო მომხმარებელს: {member.display_name}",
@@ -37,17 +35,15 @@ class Administer(commands.Cog):
     @commands.command()
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member, *, reason=None) -> None:
-        """
-        გაგდება.
-        """
+        """გაგდება."""
+
         await member.kick(reason=reason)
 
     @commands.command()
     @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
     async def load(self, ctx, extension) -> None:
-        """
-        კოგის ინსტალაცია.
-        """
+        """კოგის ინსტალაცია."""
+
         self.client.load_extension(f"cogs.{extension}")
         mbed = discord.Embed(title="COGS",
                              description=f"Loaded cog: {extension}.",
@@ -57,9 +53,8 @@ class Administer(commands.Cog):
     @commands.command()
     @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
     async def unload(self, ctx, extension) -> None:
-        """
-        კოგის დეინსტალაცია.
-        """
+        """კოგის დეინსტალაცია."""
+
         self.client.unload_extension(f"cogs.{extension}")
         mbed = discord.Embed(title="COGS",
                              description=f"```Unloaded cog: {extension}```",
@@ -105,7 +100,6 @@ class Administer(commands.Cog):
 
 
 def setup(bot) -> None:
-    """
-    Cog setup.
-    """
+    """Cog setup."""
+
     bot.add_cog(Administer(bot))
