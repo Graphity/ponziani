@@ -1,7 +1,14 @@
+import json
 import os
+import sys
+import subprocess
+from pathlib import Path
 
 import discord
 from discord.ext import commands
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+PREFIXES_FILE_FULL_NAME = "prefix.json"
 
 
 class Administer(commands.Cog):
@@ -12,6 +19,13 @@ class Administer(commands.Cog):
         :param bot: Runner Class
         """
         self.client = bot
+
+    @staticmethod
+    def generate_mbed_context(title: str, description: str, colour: discord.colour.Colour) -> discord.embeds.Embed:
+        mbed = discord.Embed(title=title,
+                             description=description,
+                             colour=colour)
+        return mbed
 
     @commands.command()
     @commands.has_permissions(manage_messages=True)
@@ -61,15 +75,35 @@ class Administer(commands.Cog):
                              colour=discord.Colour.dark_red())
         await ctx.send(embed=mbed)
 
+    @commands.command()
+    @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
+    async def change_prefix(self, ctx, new_prefix) -> None:
+        """ცვლის ბრძანებათა პრეფიქსს"""
+        # Full path of prefix.json
+        prefixes_file = BASE_DIR / PREFIXES_FILE_FULL_NAME
+
+        with open(prefixes_file, "r") as file:
+            prefixes = json.load(file)
+
+        # Add new KEY:SERVER_ID and VALUE:new_prefix
+        prefixes[str(ctx.guild.id)] = new_prefix
+
+        with open(prefixes_file, "w") as file:
+            json.dump(prefixes, file, indent=4)
+
+
+
+        await ctx.send(embed=self.generate_mbed_context(
+            title="პრეფიქსი",
+            description=f"```პრეფიქსი წარმატებით შეიცვალა! ახალი პრეფიქსი: {new_prefix}```",
+            colour=discord.Colour.dark_green()
+        ))
+
     # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    #                                                   #
     # TODO ERROR HANDLING METHODS BELOW                 #
+    #                                                   #
     # # # # # # # # # # # # # # # # # # # # # # # # # # #
-    @staticmethod
-    def generate_mbed_context(title: str, description: str, colour: discord.colour.Colour) -> discord.embeds.Embed:
-        mbed = discord.Embed(title=title,
-                             description=description,
-                             colour=colour)
-        return mbed
 
     # @clear.error
     # async def clear_error(self, ctx, error):

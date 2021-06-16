@@ -3,6 +3,7 @@ import asyncio
 import discord
 from discord.ext import commands
 
+
 class RoleManagement(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -20,9 +21,10 @@ class RoleManagement(commands.Cog):
             f.write(str(self.rrs))
 
     @commands.command()
-    @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))    
+    @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
     async def manualrr(self, ctx, data):
         await ctx.send('You are about to rewrite whole cache! Are you sure you want to do this?')
+
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
 
@@ -83,7 +85,7 @@ class RoleManagement(commands.Cog):
 
     @commands.command()
     @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
-    async def lsrr(self, ctx, msg_id: int=None):
+    async def lsrr(self, ctx, msg_id: int = None):
         if msg_id:
             try:
                 channel = await self.bot.fetch_channel(self.rrs[ctx.guild.id][msg_id]['channel'])
@@ -140,13 +142,14 @@ class RoleManagement(commands.Cog):
         if ctx.guild.id not in self.rrs:
             await ctx.send('სერვერზე RR არ არის გააქტიურებული')
             return
-        
+
         if msg_id in self.rrs[ctx.guild.id]:
             try:
                 channel = await self.bot.fetch_channel(self.rrs[ctx.guild.id][msg_id]['channel'])
                 rr_msg = await channel.fetch_message(msg_id)
             except discord.NotFound:
-                await ctx.send('მესიჯი ან ის ჩენელი სადაც მესიჯი იყო გამოგზავნილი წაშლილია, თუმცა ID-ები მაინც შენახულია')
+                await ctx.send(
+                    'მესიჯი ან ის ჩენელი სადაც მესიჯი იყო გამოგზავნილი წაშლილია, თუმცა ID-ები მაინც შენახულია')
                 return
         else:
             await ctx.send('მესიჯის ID არასწორია')
@@ -163,7 +166,7 @@ class RoleManagement(commands.Cog):
 
         helper = await ctx.send('დაიწყე ჩამოთვლა მსგავსი ფორმატით: `<emoji> <roleName>`')
         await ctx.message.delete()
-        
+
         while True:
             try:
                 msg = await self.bot.wait_for('message', timeout=60.0, check=check)
@@ -185,7 +188,7 @@ class RoleManagement(commands.Cog):
                     continue
 
                 try:
-                   await rr_msg.add_reaction(emoji)
+                    await rr_msg.add_reaction(emoji)
                 except discord.HTTPException:
                     if isinstance(emoji, discord.Emoji):
                         await ctx.send(f'ემოჯი (ID: `{emoji.id}`) არ არის სერვერზე დამატებული')

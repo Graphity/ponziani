@@ -1,2 +1,11 @@
 src/cogs/__pycache__
+
+# Local working environment
 venv
+
+# Environment vars & python runner scipt
+runner.txt
+
+# Testing scripts
+src/trash.py
+src/trash2.py
