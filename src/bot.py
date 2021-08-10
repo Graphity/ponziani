@@ -9,26 +9,26 @@ bot = commands.Bot(command_prefix=os.environ["PREFIX"], intents=intents)
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send(embed=discord.Embed(
-            title="ბრძანება",
-            description="```მსგავსი ბრძანებისთვის ლოგიკა არ დაუწერია ჯერ არავის.```",
+            title="CommandNotFound",
+            description=f"```{error}```",
             colour=discord.Colour.dark_red()
         ))
     elif isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(embed=discord.Embed(
-            title="არგუმენტები",
-            description="```არგუმენტ(ებ)ი არასწორია```",
+            title="MissingRequiredArgument",
+            description=f"```{error}```",
             colour=discord.Colour.dark_red()
         ))
     elif isinstance(error, commands.BadArgument):
         await ctx.send(embed=discord.Embed(
-            title="არგუმენტები",
-            description="```არგუმენტ(ებ)ი არასწორია```",
+            title="BadArgument",
+            description=f"```{error}```",
             colour=discord.Colour.dark_red()
         ))
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send(embed=discord.Embed(
-            title="უფლებები",
-            description="```თქვენ არ გაქვთ ამ ბრძანებით სარგებლობის უფლება.```",
+            title="MissingPermissions",
+            description=f"```{error}```",
             colour=discord.Colour.dark_red()
         ))
     raise error
