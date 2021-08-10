@@ -4,36 +4,32 @@ from discord.ext import commands
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix=os.environ["PREFIX"], intents=intents)
-moderator_role_id = int(os.environ["MODERATOR_ROLE_ID"])
-admin_role_id = int(os.environ["ADMIN_ROLE_ID"])
-
-
-def generate_mbed_context(title: str, description: str, colour: discord.colour.Colour) -> discord.embeds.Embed:
-    mbed = discord.Embed(title=title,
-                         description=description,
-                         colour=colour)
-    return mbed
-
 
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        await ctx.send(embed=generate_mbed_context(
+        await ctx.send(embed=discord.Embed(
             title="ბრძანება",
             description="```მსგავსი ბრძანებისთვის ლოგიკა არ დაუწერია ჯერ არავის.```",
-            colour=discord.Colour.dark_red(),
+            colour=discord.Colour.dark_red()
         ))
-    elif isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send(embed=generate_mbed_context(
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send(embed=discord.Embed(
             title="არგუმენტები",
             description="```არგუმენტ(ებ)ი არასწორია```",
-            colour=discord.Colour.dark_red(),
+            colour=discord.Colour.dark_red()
+        ))
+    elif isinstance(error, commands.BadArgument):
+        await ctx.send(embed=discord.Embed(
+            title="არგუმენტები",
+            description="```არგუმენტ(ებ)ი არასწორია```",
+            colour=discord.Colour.dark_red()
         ))
     elif isinstance(error, commands.MissingPermissions):
-        await ctx.send(embed=generate_mbed_context(
+        await ctx.send(embed=discord.Embed(
             title="უფლებები",
             description="```თქვენ არ გაქვთ ამ ბრძანებით სარგებლობის უფლება.```",
-            colour=discord.Colour.dark_red(),
+            colour=discord.Colour.dark_red()
         ))
     raise error
 
