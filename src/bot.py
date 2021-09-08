@@ -1,46 +1,57 @@
-import os
-import discord
 from discord.ext import commands
+import discord
+import json
+import os
 
-intents = discord.Intents.all()
-bot = commands.Bot(command_prefix=os.environ["PREFIX"], intents=intents)
 
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound):
+def _get_prefix(bot, msg):
+    if msg.guild:
+        return bot.get_guild_prefixes(msg.guild.id)
+    return "."
+
+
+class Ponziani(commands.Bot):
+    def __init__(self):
+        super().__init__(
+            command_prefix=_get_prefix,
+            intents=discord.Intents.all(),
+            help_command=None
+        )
+
+        for filename in os.listdir("./cogs"):
+            name, extension = os.path.splitext(filename)
+            if extension == ".py":
+                try:
+                    self.load_extension(f"cogs.{name}")
+                except:
+                    print(f"Failed to load extension: {filename}")
+
+    def get_guild_prefixes(self, guild_id):
+        guild_id = str(guild_id)
+        if guild_id in self.prefixes:
+            return self.prefixes[str(guild_id)]
+        return "."
+
+    async def get_config(self):
+        channel = await self.fetch_channel(os.environ["CONFIG_CHANNEL_ID"])
+        messages = await channel.history(limit=1).flatten()
+        c = await messages[0].attachments[0].read()
+        return json.loads(c)
+        
+    async def on_command_error(self, ctx, error):
         await ctx.send(embed=discord.Embed(
-            title="CommandNotFound",
+            title=type(error).__name__,
             description=f"```{error}```",
-            colour=discord.Colour.dark_red()
+            colour=discord.Colour.red()
         ))
-    elif isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send(embed=discord.Embed(
-            title="MissingRequiredArgument",
-            description=f"```{error}```",
-            colour=discord.Colour.dark_red()
-        ))
-    elif isinstance(error, commands.BadArgument):
-        await ctx.send(embed=discord.Embed(
-            title="BadArgument",
-            description=f"```{error}```",
-            colour=discord.Colour.dark_red()
-        ))
-    elif isinstance(error, commands.MissingPermissions):
-        await ctx.send(embed=discord.Embed(
-            title="MissingPermissions",
-            description=f"```{error}```",
-            colour=discord.Colour.dark_red()
-        ))
-    raise error
+        raise error
+
+    async def on_ready(self):
+        config = await self.get_config()
+        self.prefixes = config["prefixes"]
+        print("Ready...")
 
 
-@bot.command()
-async def ping(ctx):
-    await ctx.send(f"pong: {round(bot.latency * 1000)}MS")
-
-
-for filename in os.listdir("./src/cogs"):
-    if filename.endswith(".py"):
-        bot.load_extension(f"cogs.{filename[:-3]}")
-
-bot.run(os.environ["TOKEN"])
+if __name__ == "__main__":
+    bot = Ponziani()
+    bot.run(os.environ["TOKEN"])
