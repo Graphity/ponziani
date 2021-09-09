@@ -19,7 +19,7 @@ class Welcomer(commands.Cog):
         await channel.send(f'{member.mention} just joined the server', file=discord.File("welcome.png"))
 
     @commands.command()
-    @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
+    @commands.is_owner()
     async def set_welcome_channel(self, ctx, channel: discord.TextChannel):
         os.environ["WELCOME_CHANNEL"] = str(channel.id)
 
@@ -47,7 +47,7 @@ class Welcomer(commands.Cog):
         background.save("welcome.png")
     
     @commands.command()
-    @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
+    @commands.is_owner()
     async def test_welcomer(self, ctx, member: discord.User=None):
         if not member:
             member = ctx.author
