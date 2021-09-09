@@ -1,5 +1,6 @@
 from discord.ext import commands
 import discord
+import os
 
 
 class Administer(commands.Cog):
@@ -51,7 +52,7 @@ class Administer(commands.Cog):
             description=f"```Banned {member.name}\nreason: {reason}```",
             colour=discord.Colour.dark_red()
         )
-        log_channel = await self.bot.fetch_channel("LOG_CHANNEL_ID")
+        log_channel = await self.bot.fetch_channel(os.environ["LOG_CHANNEL_ID"])
         await log_channel.send(embed=embed)
 
     @commands.command()
@@ -65,7 +66,7 @@ class Administer(commands.Cog):
             description=f"```Kicked {member.name}\nreason: {reason}```",
             colour=discord.Colour.dark_red()
         )
-        log_channel = await self.bot.fetch_channel("LOG_CHANNEL_ID")
+        log_channel = await self.bot.fetch_channel(os.environ["LOG_CHANNEL_ID"])
         await log_channel.send(embed=embed)
 
 
