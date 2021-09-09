@@ -25,6 +25,12 @@ class Dev(commands.Cog):
             finally:
                 await ctx.send(f"```asciidoc\n{info}```")
 
+    @commands.command()
+    async def embed_to_dict(self, ctx, msg_id):
+        """Converts embed to dictionary"""
+        msg = await ctx.fetch_message(msg_id)
+        await ctx.send(f"```{msg.embeds[0].to_dict()}```")
+
 
 def setup(bot):
     bot.add_cog(Dev(bot))
