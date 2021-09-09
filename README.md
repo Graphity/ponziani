@@ -4,4 +4,4 @@
 ## Unfortunately discord.py is dead, no longer maintained and
 > Discord expects all bots to migrate over to Slash Commands by April 2022.
 ## So this bot doesn't have much time to live
-!.[gif](https://tenor.com/XrU5.gif)
+![gif](https://tenor.com/XrU5.gif)
