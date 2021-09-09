@@ -41,7 +41,7 @@ class RolesBot(commands.Cog):
         for roles in config["roles"]:
             if isinstance(roles, list):
                 roles = {name:None for name in roles}
-            await roles_channel.send("**...**", view=Roles(roles))
+            await roles_channel.send("\u200b", view=Roles(roles))
 
 
 def setup(bot):
