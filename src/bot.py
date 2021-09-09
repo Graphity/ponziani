@@ -18,7 +18,7 @@ class Ponziani(commands.Bot):
             help_command=None
         )
 
-        for filename in os.listdir("./cogs"):
+        for filename in os.listdir("./src/cogs"):
             name, extension = os.path.splitext(filename)
             if extension == ".py":
                 try:
