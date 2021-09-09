@@ -18,6 +18,8 @@ class CustomHelpCommand(commands.HelpCommand):
             except:
                 emoji = ""
 
+            if cog.qualified_name in ["RolesBot", "Welcomer"]:
+                continue
             embed.add_field(
                 name=f"{emoji}**{cog.qualified_name}**",
                 value=f"{len(commands)} commands"

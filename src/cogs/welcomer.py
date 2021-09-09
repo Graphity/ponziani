@@ -10,6 +10,7 @@ from io import BytesIO
 class Welcomer(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.emoji = "🤖"
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
