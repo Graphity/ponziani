@@ -31,6 +31,7 @@ class Roles(discord.ui.View):
 class RolesBot(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.emoji = "🤖"
 
     @commands.command()
     @commands.is_owner()

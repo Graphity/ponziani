@@ -7,6 +7,7 @@ import os
 class Administer(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.emoji = "🔒"
 
     @commands.command()
     @commands.guild_only()
@@ -46,6 +47,7 @@ class Administer(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     async def ban(self, ctx, member: discord.Member, reason=None):
+        reason = " ".join(reason)
         await ctx.message.delete()
         await member.ban(reason=reason)
         embed = discord.Embed(
@@ -60,6 +62,7 @@ class Administer(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     async def kick(self, ctx, member: discord.Member, reason=None):
+        reason = " ".join(reason)        
         await ctx.message.delete()
         await member.kick(reason=reason)
         embed = discord.Embed(

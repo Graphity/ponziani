@@ -6,6 +6,7 @@ import requests
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.emoji = "😁"
 
     def animal_embed(self, endpoint):
         r = requests.get(endpoint).json()

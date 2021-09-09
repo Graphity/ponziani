@@ -1,5 +1,5 @@
-import discord
 from discord.ext import commands
+import discord
 
 
 class Polls(commands.Cog):
@@ -34,6 +34,7 @@ class Polls(commands.Cog):
     
     def __init__(self, bot):
         self.bot = bot
+        self.emoji = "📊"
 
     @commands.command()
     async def poll(self, ctx, question, *options):

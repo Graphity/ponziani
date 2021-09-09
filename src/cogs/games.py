@@ -106,6 +106,7 @@ class TicTacToe(discord.ui.View):
 class Games(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.emoji = "🎮"
 
     @commands.command(aliases=["tic"])
     @commands.guild_only()
