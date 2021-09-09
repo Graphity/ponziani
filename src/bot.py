@@ -51,9 +51,6 @@ class Ponziani(commands.Bot):
         config = await self.get_config()
         self.prefixes = config["prefixes"]
         self.get_cog("Dev").emoji = self.get_emoji(877225723025317949)
-        if not self.persistent_views_added:
-            self.add_view(Roles())
-            self.persistent_views_added = True
         print("Ready...")
 
 
