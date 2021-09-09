@@ -12,11 +12,16 @@ class Welcomer(commands.Cog):
         self.bot = bot
         self.emoji = "🤖"
 
+    def avatar(self, member):
+        if member.avatar:
+            return member.avatar
+        return member.default_avatar
+
     @commands.Cog.listener()
     async def on_member_join(self, member):
         channel_id = os.environ.get("WELCOME_CHANNEL", 841223740456697856)
         channel = member.guild.get_channel(int(channel_id))
-        self.create_card(member.name, channel.guild.name, channel.guild.member_count, member.avatar)
+        self.create_card(member.name, channel.guild.name, channel.guild.member_count, self.avatar(member))
         await channel.send(f'{member.mention} just joined the server', file=discord.File("welcome.png"))
 
     @commands.command()
@@ -54,7 +59,7 @@ class Welcomer(commands.Cog):
             member = ctx.author
         channel_id = os.environ.get("WELCOME_CHANNEL", 841223740456697856)
         channel = ctx.guild.get_channel(int(channel_id))
-        self.create_card(member.name, ctx.guild.name, ctx.guild.member_count, member.avatar)
+        self.create_card(member.name, ctx.guild.name, ctx.guild.member_count, self.avatar(member))
         await channel.send(file=discord.File("welcome.png"))
 
 
