@@ -1,5 +1,6 @@
 from discord.ext import commands
 import discord
+import json
 import os
 
 
@@ -68,6 +69,42 @@ class Administer(commands.Cog):
         )
         log_channel = await self.bot.fetch_channel(os.environ["LOG_CHANNEL_ID"])
         await log_channel.send(embed=embed)
+
+    @commands.command()
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    async def activity(self, ctx, activity_type, *name):
+        """Changes activity. (Possible ActivityTypes: listening, watching, playing)"""
+        try:
+            activity_type = {
+                "listening": discord.ActivityType.listening,
+                "watching": discord.ActivityType.watching,
+                "playing": discord.ActivityType.playing,
+            }[activity_type]
+        except:
+            return
+        activity = discord.Activity(type=activity_type, name=" ".join(name))
+        await self.bot.change_presence(activity=activity)
+
+    @commands.command()
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    async def add_prefix(self, ctx, prefix):
+        if prefix in ["'", '"']:
+            await ctx.send("I can't add that prefix")
+            return
+        config = await self.bot.get_config()
+        guild_id = str(ctx.guild.id)
+        if guild_id in config["prefixes"]:
+            config["prefixes"][guild_id].append(prefix)
+        else:
+            config["prefixes"][guild_id] = [prefix]
+        config_json = json.dumps(config, indent=4)
+        with open("config.json", "w") as f:
+            f.write(config_json)
+        config_channel = await self.bot.fetch_channel(os.environ["CONFIG_CHANNEL_ID"])
+        await config_channel.send(file=discord.File("config.json"))
+        self.bot.prefixes = config["prefixes"]
 
 
 def setup(bot):

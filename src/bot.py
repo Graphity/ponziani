@@ -29,7 +29,8 @@ class Ponziani(commands.Bot):
     def get_guild_prefixes(self, guild_id):
         guild_id = str(guild_id)
         if guild_id in self.prefixes:
-            return self.prefixes[str(guild_id)]
+            prefixes = self.prefixes[str(guild_id)]
+            return [".", *prefixes]
         return "."
 
     async def get_config(self):

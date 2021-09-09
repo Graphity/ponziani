@@ -82,19 +82,8 @@ class Utility(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(administrator=True)
-    async def activity(self, ctx, activity_type, *name):
-        """Changes activity. (Possible ActivityTypes: listening, watching, playing)"""
-        try:
-            activity_type = {
-                "listening": discord.ActivityType.listening,
-                "watching": discord.ActivityType.watching,
-                "playing": discord.ActivityType.playing,
-            }[activity_type]
-        except:
-            return
-        activity = discord.Activity(type=activity_type, name=" ".join(name))
-        await self.bot.change_presence(activity=activity)
+    async def prefixes(self, ctx):
+        await ctx.send(f"`{self.bot.get_guild_prefixes(ctx.guild.id)}`")
 
 
 def setup(bot):
