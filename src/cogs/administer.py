@@ -1,137 +1,73 @@
-import json
-import os
-import sys
-import subprocess
-from pathlib import Path
-
-import discord
 from discord.ext import commands
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-PREFIXES_FILE_FULL_NAME = "prefix.json"
+import discord
 
 
 class Administer(commands.Cog):
-
     def __init__(self, bot):
-        """
-        Init
-        :param bot: Runner Class
-        """
-        self.client = bot
-
-    @staticmethod
-    def generate_mbed_context(title: str, description: str, colour: discord.colour.Colour) -> discord.embeds.Embed:
-        mbed = discord.Embed(title=title,
-                             description=description,
-                             colour=colour)
-        return mbed
+        self.bot = bot
 
     @commands.command()
-    @commands.has_permissions(manage_messages=True)
-    async def clear(self, ctx, amount: int) -> None:
-        """შლის შეტყობინებების კონკრეტულ რაოდენობას."""
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    async def clear(self, ctx, amount: int, user: discord.Member=None):
+        if amount < 1:
+            await ctx.send("Min amount = 1")
+            return
+        if amount > 100:
+            await ctx.send("Max amount = 100")
+            return
 
-        await ctx.channel.purge(limit=amount)
+        if not user:
+            try:
+                await ctx.channel.purge(limit=amount+1)
+            except Exception as e:
+                await ctx.send(e)
+            return
+
+        if user == ctx.author:
+            amount += 1
+
+        messages_to_delete = []
+        while True:
+            async for message in ctx.channel.history():
+                if amount == 0:
+                    try:
+                        await ctx.channel.delete_messages(messages_to_delete)
+                    except Exception as e:
+                        await ctx.send(e)
+                    return
+                if message.author == user:
+                    messages_to_delete.append(message)
+                    amount -= 1
 
     @commands.command()
-    @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx, member: discord.Member, *, reason=None) -> None:
-        """ბანი."""
-
-        mbed = discord.Embed(
-            title="Success",
-            description=f"ბანი დაედო მომხმარებელს: {member.display_name}",
-        )
-        await ctx.send(embed=mbed)
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    async def ban(self, ctx, member: discord.Member, reason=None):
+        await ctx.message.delete()
         await member.ban(reason=reason)
+        embed = discord.Embed(
+            title="Log: Ban",
+            description=f"```Banned {member.name}\nreason: {reason}```",
+            colour=discord.Colour.dark_red()
+        )
+        log_channel = await self.bot.fetch_channel("LOG_CHANNEL_ID")
+        await log_channel.send(embed=embed)
 
     @commands.command()
-    @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx, member: discord.Member, *, reason=None) -> None:
-        """გაგდება."""
-
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    async def kick(self, ctx, member: discord.Member, reason=None):
+        await ctx.message.delete()
         await member.kick(reason=reason)
-
-    @commands.command()
-    @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
-    async def load(self, ctx, extension) -> None:
-        """კოგის ინსტალაცია."""
-
-        self.client.load_extension(f"cogs.{extension}")
-        mbed = discord.Embed(title="COGS",
-                             description=f"Loaded cog: {extension}.",
-                             colour=discord.Colour.dark_red())
-        await ctx.send(embed=mbed)
-
-    @commands.command()
-    @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
-    async def unload(self, ctx, extension) -> None:
-        """კოგის დეინსტალაცია."""
-
-        self.client.unload_extension(f"cogs.{extension}")
-        mbed = discord.Embed(title="COGS",
-                             description=f"```Unloaded cog: {extension}```",
-                             colour=discord.Colour.dark_red())
-        await ctx.send(embed=mbed)
-
-    # @commands.command()
-    # @commands.has_role(int(os.environ["OWNER_ROLE_ID"]))
-    # async def change_prefix(self, ctx, new_prefix) -> None:
-    #     """ცვლის ბრძანებათა პრეფიქსს"""
-    #     # Full path of prefix.json
-    #     prefixes_file = BASE_DIR / PREFIXES_FILE_FULL_NAME
-    #
-    #     with open(prefixes_file, "r") as file:
-    #         prefixes = json.load(file)
-    #
-    #     # Add new KEY:SERVER_ID and VALUE:new_prefix
-    #     prefixes[str(ctx.guild.id)] = new_prefix
-    #
-    #     with open(prefixes_file, "w") as file:
-    #         json.dump(prefixes, file, indent=4)
-    #
-    #     await ctx.send(embed=self.generate_mbed_context(
-    #         title="პრეფიქსი",
-    #         description=f"```პრეფიქსი წარმატებით შეიცვალა! ახალი პრეფიქსი: {new_prefix}```",
-    #         colour=discord.Colour.dark_green()
-    #     ))
-
-    # # # # # # # # # # # # # # # # # # # # # # # # # # #
-    #                                                   #
-    # TODO ERROR HANDLING METHODS BELOW                 #
-    #                                                   #
-    # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-    # @clear.error
-    # async def clear_error(self, ctx, error):
-    #     if isinstance(error, commands.BadArgument):
-    #         mbed = discord.Embed(title="ბრძანებსი არასწორი სინტაქსი",
-    #                              description="```$clear <რაოდენობა>```",
-    #                              colour=discord.Colour.dark_red())
-    #         await ctx.send(embed=mbed)
-
-    @load.error
-    async def load_error(self, ctx, error):
-        if isinstance(error, commands.errors.CommandInvokeError):
-            mbed = self.generate_mbed_context(
-                title="COGS",
-                description="```ინსტალაცია ვერ ხერხდება: უკვე დაინსტალირებულია.```",
-                colour=discord.Colour.dark_red())
-
-            await ctx.send(embed=mbed)
-
-    @unload.error
-    async def unload_error(self, ctx, error):
-        if isinstance(error, commands.CommandInvokeError):
-            mbed = self.generate_mbed_context(
-                title="COGS",
-                description="```დეინსტალაცია ვერ ხერხდება: უკვე დეინსტალირებულია.```",
-                colour=discord.Colour.dark_red())
-            await ctx.send(embed=mbed)
+        embed = discord.Embed(
+            title="Log: Kick",
+            description=f"```Kicked {member.name}\nreason: {reason}```",
+            colour=discord.Colour.dark_red()
+        )
+        log_channel = await self.bot.fetch_channel("LOG_CHANNEL_ID")
+        await log_channel.send(embed=embed)
 
 
-def setup(bot) -> None:
-    """Cog setup."""
-
+def setup(bot):
     bot.add_cog(Administer(bot))
