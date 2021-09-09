@@ -6,9 +6,9 @@ import os
 class RolesButton(discord.ui.Button["Roles"]):
     def __init__(self, name, emoji):
         if emoji:
-            super().__init__(label=name, emoji=emoji)
+            super().__init__(label=name, emoji=emoji, custom_id=f"ponziani:{name}")
         else:
-            super().__init__(label=name, style=1)
+            super().__init__(label=name, style=1, custom_id=f"ponziani:{name}")
 
     async def callback(self, interaction: discord.Interaction):
         roles = await interaction.guild.fetch_roles()
@@ -22,7 +22,7 @@ class RolesButton(discord.ui.Button["Roles"]):
                 return
 
 class Roles(discord.ui.View):
-    def __init__(self, roles):
+    def __init__(self, roles, timeout=None):
         super().__init__()
         for name, emoji in roles.items():
             self.add_item(RolesButton(name, emoji))
