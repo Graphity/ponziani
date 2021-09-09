@@ -22,8 +22,8 @@ class RolesButton(discord.ui.Button["Roles"]):
                 return
 
 class Roles(discord.ui.View):
-    def __init__(self, roles, timeout=None):
-        super().__init__()
+    def __init__(self, roles):
+        super().__init__(timeout=None)
         for name, emoji in roles.items():
             self.add_item(RolesButton(name, emoji))
 
@@ -33,15 +33,15 @@ class RolesBot(commands.Cog):
         self.bot = bot
         self.emoji = "🤖"
 
-    @commands.command()
-    @commands.is_owner()
-    async def roles(self, ctx):
+    @commands.Cog.listener()
+    async def on_ready(self):
         config = await self.bot.get_config()
         roles_channel = await self.bot.fetch_channel(os.environ["ROLES_CHANNEL_ID"])
         await roles_channel.purge()
         for roles in config["roles"]:
             if isinstance(roles, list):
                 roles = {name:None for name in roles}
+            self.bot.add_view(Roles(roles))
             await roles_channel.send("\u200b", view=Roles(roles))
 
 
