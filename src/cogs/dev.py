@@ -32,5 +32,5 @@ class Dev(commands.Cog):
         await ctx.send(f"```{msg.embeds[0].to_dict()}```")
 
 
-def setup(bot):
-    bot.add_cog(Dev(bot))
+async def setup(bot):
+    await bot.add_cog(Dev(bot))

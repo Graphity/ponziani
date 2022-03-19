@@ -88,5 +88,5 @@ class Utility(commands.Cog):
         await ctx.send(f"`{self.bot.get_guild_prefixes(ctx.guild.id)}`")
 
 
-def setup(bot):
-    bot.add_cog(Utility(bot))
+async def setup(bot):
+    await bot.add_cog(Utility(bot))

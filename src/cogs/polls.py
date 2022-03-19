@@ -101,5 +101,5 @@ class Polls(commands.Cog):
         await msg.add_reaction(self.letters[new_option_id])
 
 
-def setup(bot):
-    bot.add_cog(Polls(bot))
+async def setup(bot):
+    await bot.add_cog(Polls(bot))

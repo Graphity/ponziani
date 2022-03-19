@@ -110,5 +110,5 @@ class Administer(commands.Cog):
         self.bot.prefixes = config["prefixes"]
 
 
-def setup(bot):
-    bot.add_cog(Administer(bot))
+async def setup(bot):
+    await bot.add_cog(Administer(bot))

@@ -18,14 +18,6 @@ class Ponziani(commands.Bot):
             help_command=None
         )
 
-        for filename in os.listdir("./src/cogs"):
-            name, extension = os.path.splitext(filename)
-            if extension == ".py":
-                try:
-                    self.load_extension(f"cogs.{name}")
-                except:
-                    print(f"Failed to load extension: {filename}")
-
     def get_guild_prefixes(self, guild_id):
         guild_id = str(guild_id)
         if guild_id in self.prefixes:
@@ -33,9 +25,20 @@ class Ponziani(commands.Bot):
             return [".", *prefixes]
         return "."
 
+    async def setup_hook(self):
+        for filename in os.listdir("./src/cogs"):
+            name, extension = os.path.splitext(filename)
+            if extension == ".py":
+                try:
+                    await self.load_extension(f"cogs.{name}")
+                except:
+                    print(f"Failed to load extension: {filename}")
+        # self.loop.create_task(background_task())
+
     async def get_config(self):
         channel = await self.fetch_channel(os.environ["CONFIG_CHANNEL_ID"])
-        messages = await channel.history(limit=1).flatten()
+        #messages = await channel.history(limit=1).flatten()
+        messages = [message async for message in channel.history(limit=1)]
         c = await messages[0].attachments[0].read()
         return json.loads(c)
         

@@ -45,5 +45,5 @@ class RolesBot(commands.Cog):
             await roles_channel.send("\u200b", view=Roles(roles))
 
 
-def setup(bot):
-    bot.add_cog(RolesBot(bot))
+async def setup(bot):
+    await bot.add_cog(RolesBot(bot))
