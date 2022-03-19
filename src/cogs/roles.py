@@ -19,6 +19,7 @@ class RolesButton(discord.ui.Button["Roles"]):
                     await member.remove_roles(role)
                 else:
                     await member.add_roles(role)
+                await interaction.response.defer()
                 return
 
 class Roles(discord.ui.View):
