@@ -33,11 +33,9 @@ class Ponziani(commands.Bot):
                     await self.load_extension(f"cogs.{name}")
                 except:
                     print(f"Failed to load extension: {filename}")
-        # self.loop.create_task(background_task())
 
     async def get_config(self):
         channel = await self.fetch_channel(os.environ["CONFIG_CHANNEL_ID"])
-        #messages = await channel.history(limit=1).flatten()
         messages = [message async for message in channel.history(limit=1)]
         c = await messages[0].attachments[0].read()
         return json.loads(c)
